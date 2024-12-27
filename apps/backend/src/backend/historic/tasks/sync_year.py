@@ -11,5 +11,6 @@ from backend.historic.tasks.year.sync_events import sync_events
     log_prints=True,
 )
 def sync_year(year: int):
+    print(f"Syncing Year {year}")
     sync_teams(year=year)
     sync_events(year=year)
