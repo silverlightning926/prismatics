@@ -15,6 +15,7 @@ def sync_teams(year: int):
         save_teams(page_teams)
         page += 1
 
+        # TODO: Replace With Logging
         print(f"Synced {len(page_teams)} teams for {year} on page {page}")
 
         sleep(5.0)
