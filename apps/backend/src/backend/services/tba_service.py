@@ -15,7 +15,7 @@ HEADERS = {
 def get_year_teams_page(
     year: int,
     page: int,
-) -> list[Team]:
+) -> tuple[list[Team], Etag]:
 
     endpoint = f"/teams/{year}/{page}"
     etag = get_etag(endpoint)
@@ -34,14 +34,14 @@ def get_year_teams_page(
 
     response.raise_for_status()
 
-    save_etag(Etag(endpoint=endpoint, etag=response.headers["ETag"]))
+    new_etag = Etag(endpoint=endpoint, etag=response.headers["ETag"])
 
-    return [Team.from_dict(team) for team in response.json()]
+    return [Team.from_dict(team) for team in response.json()], new_etag
 
 
 def get_year_events(
     year: int,
-) -> list[Event]:
+) -> tuple[list[Event], Etag]:
 
     endpoint = f"/events/{year}"
     etag = get_etag(endpoint)
@@ -59,6 +59,6 @@ def get_year_events(
 
     response.raise_for_status()
 
-    save_etag(Etag(endpoint=endpoint, etag=response.headers["ETag"]))
+    new_etag = Etag(endpoint=endpoint, etag=response.headers["ETag"])
 
-    return [Event.from_dict(event) for event in response.json()]
+    return [Event.from_dict(event) for event in response.json()], new_etag
