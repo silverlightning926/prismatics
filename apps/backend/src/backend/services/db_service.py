@@ -47,6 +47,6 @@ def save_teams(teams: list[Team]):
 def save_snyc_log(
     sync_log: SyncLog,
 ):
-    supabase.table("sync-logs").insert(
+    supabase.table("sync-logs").upsert(
         json=sync_log.model_dump(),
     ).execute()
