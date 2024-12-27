@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
-import pytz
 
 
 class Division(BaseModel):
@@ -21,7 +20,6 @@ class Webcast(BaseModel):
         cls,
         data: dict,
         event_key: str,
-        timezone: pytz.timezone,
     ) -> "Webcast":
         return cls(
             event_key=event_key,
@@ -31,9 +29,7 @@ class Webcast(BaseModel):
                 datetime.strptime(
                     data.get("date"),
                     "%Y-%m-%d",
-                )
-                .replace(tzinfo=timezone)
-                .isoformat()
+                ).isoformat()
                 if data.get("date")
                 else None
             ),
@@ -77,6 +73,7 @@ class Event(BaseModel):
     lat: Optional[float]
     lng: Optional[float]
     location_name: Optional[str]
+    timezone: Optional[str]
     website: Optional[str]
     webcasts: list[Webcast]
     division: Optional[Division]
@@ -100,15 +97,11 @@ class Event(BaseModel):
             start_date=datetime.strptime(
                 data.get("start_date"),
                 "%Y-%m-%d",
-            )
-            .replace(tzinfo=pytz.timezone(data.get("timezone")))
-            .isoformat(),
+            ).isoformat(),
             end_date=datetime.strptime(
                 data.get("end_date"),
                 "%Y-%m-%d",
-            )
-            .replace(tzinfo=pytz.timezone(data.get("timezone")))
-            .isoformat(),
+            ).isoformat(),
             year=data.get("year"),
             short_name=data.get("short_name"),
             week=data.get("week"),
@@ -118,12 +111,12 @@ class Event(BaseModel):
             lat=data.get("lat"),
             lng=data.get("lng"),
             location_name=data.get("location_name"),
+            timezone=data.get("timezone"),
             website=data.get("website"),
             webcasts=[
                 Webcast.from_dict(
                     webcast,
                     event_key=data.get("key"),
-                    timezone=pytz.timezone(data.get("timezone")),
                 )
                 for webcast in data.get("webcasts", [])
             ],
