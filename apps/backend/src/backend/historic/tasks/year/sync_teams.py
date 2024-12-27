@@ -5,7 +5,13 @@ from time import sleep
 from backend.settings import settings
 
 
-@task
+@task(
+    name="Historic Team Sync",
+    tags=["historic"],
+    retries=3,
+    retry_delay_seconds=15,
+    log_prints=True,
+)
 def sync_teams(year: int):
     page = 0
     while True:
