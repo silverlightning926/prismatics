@@ -1,6 +1,6 @@
 from prefect import flow
 from settings import settings
-from historic.tasks.sync_year import sync_year
+from tasks.sync_year import sync_year
 
 
 @flow
