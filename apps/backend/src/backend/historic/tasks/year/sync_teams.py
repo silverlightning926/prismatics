@@ -8,12 +8,12 @@ from time import sleep
 def sync_teams(year: int):
     page = 0
     while True:
-        page += 1
         page_teams = get_year_teams_page(year=year, page=page)
         if not page_teams:
             break
 
         save_teams(page_teams)
+        page += 1
 
         print(f"Synced {len(page_teams)} teams for {year} on page {page}")
 
