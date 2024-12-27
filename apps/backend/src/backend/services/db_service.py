@@ -1,7 +1,9 @@
+from pprint import pprint
 from typing import Optional
 from supabase import create_client, Client
 from os import getenv
 from backend.models.etag import Etag
+from backend.models.tba.event import Event
 from backend.models.tba.team import Team
 from backend.models.sync_log import SyncLog
 
@@ -41,6 +43,47 @@ def save_teams(teams: list[Team]):
     supabase.table("teams").upsert(
         json=[team.model_dump() for team in teams],
         on_conflict=["key"],
+    ).execute()
+
+
+def save_events(events: list[Event]):
+    districts = list(
+        {
+            event.district.key: event.district.model_dump()
+            for event in events
+            if event.district
+        }.values()
+    )
+
+    supabase.table("event-districts").upsert(
+        json=districts,
+    ).execute()
+
+    new_events = [event.model_dump() for event in events]
+
+    for event in new_events:
+        event.pop("webcasts")
+        event.pop("division")
+        if event.get("district"):
+            event["district_key"] = event["district"]["key"]
+        else:
+            event["district_key"] = None
+        event.pop("district")
+
+    supabase.table("events").upsert(
+        json=new_events,
+        on_conflict=["key"],
+    ).execute()
+
+    divisions = [event.division.model_dump() for event in events if event.division]
+    supabase.table("event-divisions").upsert(
+        json=divisions,
+    ).execute()
+
+    webcasts = [webcast.model_dump() for event in events for webcast in event.webcasts]
+
+    supabase.table("event-webcasts").upsert(
+        json=webcasts,
     ).execute()
 
 

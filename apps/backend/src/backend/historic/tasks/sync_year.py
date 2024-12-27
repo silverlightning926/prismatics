@@ -1,5 +1,6 @@
 from prefect import task
 from backend.historic.tasks.year.sync_teams import sync_teams
+from backend.historic.tasks.year.sync_events import sync_events
 
 
 @task(
@@ -11,3 +12,4 @@ from backend.historic.tasks.year.sync_teams import sync_teams
 )
 def sync_year(year: int):
     sync_teams(year=year)
+    sync_events(year=year)
