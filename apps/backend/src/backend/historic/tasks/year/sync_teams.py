@@ -2,6 +2,7 @@ from prefect import task
 from backend.services.tba_service import get_year_teams_page
 from backend.services.db_service import save_teams
 from time import sleep
+from backend.settings import settings
 
 
 @task
@@ -18,4 +19,4 @@ def sync_teams(year: int):
         # TODO: Replace With Logging
         print(f"Synced {len(page_teams)} teams for {year} on page {page}")
 
-        sleep(5.0)
+        sleep(settings.request_throttle_secs)

@@ -13,5 +13,7 @@ class Settings(BaseSettings):
         2024,
     ]
 
+    request_throttle_secs: float = 5.0
+
 
 settings = Settings()
