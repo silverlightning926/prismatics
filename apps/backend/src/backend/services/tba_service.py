@@ -30,7 +30,12 @@ def get_year_teams_page(
         headers=HEADERS,
     )
 
-    save_snyc_log(SyncLog(endpoint=endpoint, status_code=response.status_code))
+    save_snyc_log(
+        SyncLog(
+            endpoint=endpoint,
+            status_code=response.status_code,
+        )
+    )
 
     # TODO: Bug - If 304 is returned, and empty list is returned then task will break before completing all pages
     if response.status_code == 304:
