@@ -4,15 +4,12 @@ from pydantic import BaseModel
 
 class Team(BaseModel):
     key: str
-    team_number: int
+    number: int
     nickname: str
     name: str
     city: Optional[str]
     state_prov: Optional[str]
     country: Optional[str]
-    lat: Optional[float]
-    lng: Optional[float]
-    location_name: Optional[str]
     website: Optional[str]
     rookie_year: Optional[int]
 
@@ -20,7 +17,7 @@ class Team(BaseModel):
     def from_dict(cls, data: dict):
         return cls(
             key=data["key"],
-            team_number=data["team_number"],
+            number=data["team_number"],
             nickname=data["nickname"],
             name=data["name"],
             city=data.get("city"),
