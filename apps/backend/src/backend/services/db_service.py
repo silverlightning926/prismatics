@@ -32,21 +32,23 @@ def get_etag(endpoint: str) -> Optional[Etag]:
 
 
 def save_etag(etag: Etag):
-    supabase.table("etags").upsert(
-        json=etag.model_dump(),
-        on_conflict=["endpoint"],
-    ).execute()
+    if etag:
+        supabase.table("etags").upsert(
+            json=etag.model_dump(),
+            on_conflict=["endpoint"],
+        ).execute()
 
 
 def save_teams(teams: list[Team]):
-    supabase.table("teams").upsert(
-        json=[team.model_dump() for team in teams],
-        on_conflict=["key"],
-    ).execute()
+    if teams:
+        supabase.table("teams").upsert(
+            json=[team.model_dump() for team in teams],
+            on_conflict=["key"],
+        ).execute()
 
 
 def save_events(events: list[Event]):
-    districts = list(
+    new_districts = list(
         {
             event.district.key: event.district.model_dump()
             for event in events
@@ -54,9 +56,10 @@ def save_events(events: list[Event]):
         }.values()
     )
 
-    supabase.table("event-districts").upsert(
-        json=districts,
-    ).execute()
+    if new_districts:
+        supabase.table("event-districts").upsert(
+            json=new_districts,
+        ).execute()
 
     new_events = [event.model_dump() for event in events]
 
@@ -69,18 +72,20 @@ def save_events(events: list[Event]):
             event["district_key"] = None
         event.pop("district")
 
-    supabase.table("events").upsert(
-        json=new_events,
-        on_conflict=["key"],
-    ).execute()
+    if new_events:
+        supabase.table("events").upsert(
+            json=new_events,
+            on_conflict=["key"],
+        ).execute()
 
-    divisions = [event.division.model_dump() for event in events if event.division]
-    supabase.table("event-divisions").upsert(
-        json=divisions,
-    ).execute()
+    new_divisions = [event.division.model_dump() for event in events if event.division]
+    if new_divisions:
+        supabase.table("event-divisions").upsert(
+            json=new_divisions,
+        ).execute()
 
     webcasts = [webcast.model_dump() for event in events for webcast in event.webcasts]
-
-    supabase.table("event-webcasts").upsert(
-        json=webcasts,
-    ).execute()
+    if webcasts:
+        supabase.table("event-webcasts").upsert(
+            json=webcasts,
+        ).execute()
