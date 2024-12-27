@@ -1,8 +1,7 @@
 from backend.models.etag import Etag
-from backend.models.sync_log import SyncLog
 from backend.models.tba.team import Team
 from backend.models.tba.event import Event
-from backend.services.db_service import get_etag, save_etag, save_snyc_log
+from backend.services.db_service import get_etag, save_etag
 
 import requests
 from os import getenv
@@ -29,13 +28,6 @@ def get_year_teams_page(
         headers=HEADERS,
     )
 
-    save_snyc_log(
-        SyncLog(
-            endpoint=endpoint,
-            status_code=response.status_code,
-        )
-    )
-
     # ! TODO: Fix Bug - If 304 is returned, and empty list is returned then task will break before completing all pages
     if response.status_code == 304:
         return []
@@ -60,13 +52,6 @@ def get_year_events(
     response = requests.get(
         f"{BASE_URL}{endpoint}",
         headers=HEADERS,
-    )
-
-    save_snyc_log(
-        SyncLog(
-            endpoint=endpoint,
-            status_code=response.status_code,
-        )
     )
 
     if response.status_code == 304:

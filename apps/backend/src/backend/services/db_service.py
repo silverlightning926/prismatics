@@ -5,7 +5,6 @@ from os import getenv
 from backend.models.etag import Etag
 from backend.models.tba.event import Event
 from backend.models.tba.team import Team
-from backend.models.sync_log import SyncLog
 
 SUPABASE_URL = getenv("SUPABASE_URL")
 SUPABASE_KEY = getenv("SUPABASE_KEY")
@@ -84,12 +83,4 @@ def save_events(events: list[Event]):
 
     supabase.table("event-webcasts").upsert(
         json=webcasts,
-    ).execute()
-
-
-def save_snyc_log(
-    sync_log: SyncLog,
-):
-    supabase.table("sync-logs").upsert(
-        json=sync_log.model_dump(),
     ).execute()
