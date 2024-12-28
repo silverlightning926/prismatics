@@ -15,6 +15,7 @@ from backend.settings import settings
     log_prints=True,
 )
 def sync_events(year: int):
+    # ! TODO: Fix bug - if etag match, then this will return None and fail to unpack
     events, etag = get_year_events(year=year)
     events = filter_events(events)
 

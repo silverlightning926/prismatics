@@ -15,6 +15,7 @@ from backend.settings import settings
 def sync_teams(year: int):
     page = 0
     while True:
+        # ! TODO: Fix bug - if etag match, then this will return None and fail to unpack
         page_teams, etag = get_year_teams_page(year=year, page=page)
         if not page_teams:
             break

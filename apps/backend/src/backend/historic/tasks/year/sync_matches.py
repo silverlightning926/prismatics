@@ -20,6 +20,8 @@ def sync_matches(year: int):
     event_keys = get_event_keys_for_year(year=year)
 
     for event_key in event_keys:
+
+        # ! TODO: Fix bug - if etag match, then this will return None and fail to unpack
         matches, etag = get_event_matches(event_key=event_key)
 
         upsert_matches(matches=matches)
