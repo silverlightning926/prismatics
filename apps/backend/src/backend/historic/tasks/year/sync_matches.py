@@ -7,6 +7,7 @@ from backend.services.db_service import (
     upsert_matches,
 )
 from backend.services.tba_service import get_event_matches
+from backend.utils.filter_utils import filter_matches
 
 
 @task(
@@ -23,6 +24,7 @@ def sync_matches(year: int):
 
         # ! TODO: Fix bug - if etag match, then this will return None and fail to unpack
         matches, etag = get_event_matches(event_key=event_key)
+        matches = filter_matches(matches)
 
         upsert_matches(matches=matches)
 
