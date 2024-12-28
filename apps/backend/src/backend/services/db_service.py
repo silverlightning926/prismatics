@@ -4,6 +4,7 @@ from supabase import create_client, Client
 from os import getenv
 from backend.models.etag import Etag
 from backend.models.tba.event import Event
+from backend.models.tba.match import Match
 from backend.models.tba.team import Team
 
 SUPABASE_URL = getenv("SUPABASE_URL")
@@ -89,3 +90,43 @@ def save_events(events: list[Event]):
         supabase.table("event-webcasts").upsert(
             json=webcasts,
         ).execute()
+
+
+def get_event_keys_for_year(year: int) -> list[str]:
+    response = (
+        supabase.table("events")
+        .select("key")
+        .eq("year", year)
+        .order("start_date")
+        .execute()
+    )
+    return [event["key"] for event in response.data]
+
+
+def upsert_matches(matches: list[Match]):
+    new_matches = [
+        match.model_dump(exclude={"alliances", "videos"}) for match in matches
+    ]
+    if new_matches:
+        supabase.table("matches").upsert(json=new_matches).execute()
+
+    new_alliances = [
+        alliance.model_dump(exclude={"teams"})
+        for match in matches
+        for alliance in match.alliances
+    ]
+    if new_alliances:
+        supabase.table("match-alliances").upsert(json=new_alliances).execute()
+
+    new_alliance_teams = [
+        alliance_team.model_dump(exclude={"teams"})
+        for match in matches
+        for alliance in match.alliances
+        for alliance_team in alliance.teams
+    ]
+    if new_alliance_teams:
+        supabase.table("alliance-teams").upsert(json=new_alliance_teams).execute()
+
+    new_videos = [video.model_dump() for match in matches for video in match.videos]
+    if new_videos:
+        supabase.table("match-videos").upsert(json=new_videos).execute()

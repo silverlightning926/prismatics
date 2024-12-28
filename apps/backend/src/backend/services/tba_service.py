@@ -1,7 +1,8 @@
 from backend.models.etag import Etag
 from backend.models.tba.team import Team
 from backend.models.tba.event import Event
-from backend.services.db_service import get_etag, save_etag
+from backend.models.tba.match import Match
+from backend.services.db_service import get_etag
 
 import requests
 from os import getenv
@@ -62,3 +63,28 @@ def get_year_events(
     new_etag = Etag(endpoint=endpoint, etag=response.headers["ETag"])
 
     return [Event.from_dict(event) for event in response.json()], new_etag
+
+
+def get_event_matches(
+    event_key: str,
+) -> tuple[list[Match], Etag]:
+
+    endpoint = f"/event/{event_key}/matches"
+    etag = get_etag(endpoint)
+
+    if etag:
+        HEADERS["If-None-Match"] = etag.etag
+
+    response = requests.get(
+        f"{BASE_URL}{endpoint}",
+        headers=HEADERS,
+    )
+
+    if response.status_code == 304:
+        return []
+
+    response.raise_for_status()
+
+    new_etag = Etag(endpoint=endpoint, etag=response.headers["ETag"])
+
+    return [Match.from_dict(match) for match in response.json()], new_etag
