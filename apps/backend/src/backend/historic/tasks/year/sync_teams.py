@@ -24,6 +24,9 @@ def sync_teams(year: int):
 
         page_teams, etag = result
 
+        if not page_teams:
+            break
+
         save_teams(page_teams)
 
         save_etag(etag)
