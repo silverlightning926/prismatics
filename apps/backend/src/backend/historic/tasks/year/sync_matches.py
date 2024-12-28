@@ -21,9 +21,14 @@ def sync_matches(year: int):
     event_keys = get_event_keys_for_year(year=year)
 
     for event_key in event_keys:
+        result = get_event_matches(event_key=event_key)
 
-        # ! TODO: Fix bug - if etag match, then this will return None and fail to unpack
-        matches, etag = get_event_matches(event_key=event_key)
+        if not result:
+            print(f"Match Sync ({event_key}) | ETag Match")
+            sleep(settings.request_throttle_secs)
+            continue
+
+        matches, etag = result
         matches = filter_matches(matches)
 
         upsert_matches(matches=matches)

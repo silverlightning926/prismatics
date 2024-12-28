@@ -15,10 +15,14 @@ from backend.settings import settings
 def sync_teams(year: int):
     page = 0
     while True:
-        # ! TODO: Fix bug - if etag match, then this will return None and fail to unpack
-        page_teams, etag = get_year_teams_page(year=year, page=page)
-        if not page_teams:
+        result = get_year_teams_page(year=year, page=page)
+
+        if not result:
+            print(f"Team Sync ({year}) | ETag Match")
+            sleep(settings.request_throttle_secs)
             break
+
+        page_teams, etag = result
 
         save_teams(page_teams)
 

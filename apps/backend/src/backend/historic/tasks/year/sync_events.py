@@ -15,8 +15,14 @@ from backend.settings import settings
     log_prints=True,
 )
 def sync_events(year: int):
-    # ! TODO: Fix bug - if etag match, then this will return None and fail to unpack
-    events, etag = get_year_events(year=year)
+    result = get_year_events(year=year)
+
+    if not result:
+        print(f"Event Sync ({year}) | ETag Match")
+        sleep(settings.request_throttle_secs)
+        return
+
+    events, etag = result
     events = filter_events(events)
 
     save_events(events)
