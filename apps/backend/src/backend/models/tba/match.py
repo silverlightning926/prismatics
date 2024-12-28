@@ -64,7 +64,9 @@ class Alliance(BaseModel):
             match_key=match_key,
             color=color,
             score=alliance_data.get("score"),
-            score_breakdown=score_breakdown.get(color),
+            score_breakdown=(
+                score_breakdown.get(color, None) if score_breakdown else None
+            ),
             teams=[
                 AllianceTeam.from_dict(
                     team_key,
