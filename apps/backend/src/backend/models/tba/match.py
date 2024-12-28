@@ -48,7 +48,7 @@ class Alliance(BaseModel):
     match_key: str
     color: str
     score: int
-    score_breakdown: Optional[str]
+    score_breakdown: Optional[dict]
     teams: list[AllianceTeam]
 
     @classmethod
@@ -57,14 +57,14 @@ class Alliance(BaseModel):
         match_key: str,
         color: str,
         alliance_data: dict,
-        score_breakdown: Optional[str],
+        score_breakdown: Optional[dict],
     ):
         return cls(
             key=f"{match_key}_{color}",
             match_key=match_key,
             color=color,
             score=alliance_data.get("score"),
-            score_breakdown=score_breakdown,
+            score_breakdown=score_breakdown.get(color),
             teams=[
                 AllianceTeam.from_dict(
                     team_key,
@@ -89,7 +89,7 @@ class Match(BaseModel):
     comp_level: str
     set_number: int
     match_number: int
-    winning_alliance: str
+    winning_alliance: Optional[str]
     event_key: str
     alliances: list[Alliance]
     time: Optional[str]
@@ -112,7 +112,7 @@ class Match(BaseModel):
                     data.get("key"),
                     color,
                     alliance_data,
-                    dumps(data.get("score_breakdown")),
+                    data.get("score_breakdown"),
                 )
                 for color, alliance_data in data.get("alliances").items()
             ],
