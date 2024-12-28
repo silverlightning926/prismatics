@@ -20,7 +20,7 @@ def sync_teams(year: int):
         if not result:
             print(f"Team Sync ({year}) | ETag Match")
             sleep(settings.request_throttle_secs)
-            break
+            continue
 
         page_teams, etag = result
 
