@@ -22,15 +22,24 @@ class AllianceTeam(BaseModel):
     key: str
     team_key: str
     alliance_key: str
-    type: str
+    surrogate: bool
+    disqualified: bool
 
     @classmethod
-    def from_dict(cls, team_key: str, alliance: str, match_key: str, type: str):
+    def from_dict(
+        cls,
+        team_key: str,
+        alliance: str,
+        match_key: str,
+        surrogate: bool,
+        disqualified: bool,
+    ):
         return cls(
             key=f"{match_key}_{team_key}",
             team_key=team_key,
             alliance_key=f"{match_key}_{alliance}",
-            type=type,
+            surrogate=surrogate,
+            disqualified=disqualified,
         )
 
 
@@ -61,15 +70,8 @@ class Alliance(BaseModel):
                     team_key,
                     color,
                     match_key,
-                    type=(
-                        "normal"
-                        if team_key in alliance_data.get("team_keys", [])
-                        else (
-                            "surrogate"
-                            if team_key in alliance_data.get("surrogate_team_keys", [])
-                            else "disqualified"
-                        )
-                    ),
+                    surrogate=team_key in alliance_data.get("surrogate_team_keys", []),
+                    disqualified=team_key in alliance_data.get("dq_team_keys", []),
                 )
                 for team_key in list(
                     set(
