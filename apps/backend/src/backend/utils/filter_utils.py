@@ -65,6 +65,7 @@ def filter_matches(matches: list[Match]) -> list[Match]:
     ]
     filtered_matches = []
 
+    # ! TODO: Match filter is not working as expected
     for match in matches:
         for alliance in match.alliances:
             alliance.teams = [
