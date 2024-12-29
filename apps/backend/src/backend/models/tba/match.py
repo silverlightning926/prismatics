@@ -107,7 +107,7 @@ class Match(BaseModel):
             comp_level=data.get("comp_level"),
             set_number=data.get("set_number"),
             match_number=data.get("match_number"),
-            winning_alliance=data.get("winning_alliance"),
+            winning_alliance=data.get("winning_alliance", None),
             event_key=data.get("event_key"),
             alliances=[
                 Alliance.from_dict(
