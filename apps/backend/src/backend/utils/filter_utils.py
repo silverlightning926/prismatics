@@ -64,7 +64,7 @@ def filter_matches(matches: list[Match]) -> list[Match]:
         "frc9999",
     ]
 
-    return [
+    filtered_matches = [
         match
         for match in matches
         if not any(
@@ -73,3 +73,18 @@ def filter_matches(matches: list[Match]) -> list[Match]:
             for team in alliance.teams
         )
     ]
+
+    filtered_matches = [
+        match
+        for match in filtered_matches
+        if len(
+            set(
+                team.team_key for alliance in match.alliances for team in alliance.teams
+            )
+        )
+        == len(
+            [team.team_key for alliance in match.alliances for team in alliance.teams]
+        )
+    ]
+
+    return filtered_matches
