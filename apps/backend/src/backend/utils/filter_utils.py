@@ -63,14 +63,13 @@ def filter_matches(matches: list[Match]) -> list[Match]:
         "frc9998",
         "frc9999",
     ]
-    filtered_matches = []
 
-    # ! TODO: Match filter is not working as expected
-    for match in matches:
-        for alliance in match.alliances:
-            alliance.teams = [
-                team for team in alliance.teams if team.team_key not in teams_blacklist
-            ]
-        filtered_matches.append(match)
-
-    return filtered_matches
+    return [
+        match
+        for match in matches
+        if not any(
+            team.team_key in teams_blacklist
+            for alliance in match.alliances
+            for team in alliance.teams
+        )
+    ]
