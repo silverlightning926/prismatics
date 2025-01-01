@@ -16,3 +16,4 @@ def sync_year(year: int):
     sync_teams(year=year)
     sync_events(year=year)
     sync_matches(year=year)
+    sync_ranks(year=year)

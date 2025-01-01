@@ -5,6 +5,7 @@ from os import getenv
 from backend.models.etag import Etag
 from backend.models.tba.event import Event
 from backend.models.tba.match import Match
+from backend.models.tba.ranking import Ranking
 from backend.models.tba.team import Team
 
 SUPABASE_URL = getenv("SUPABASE_URL")
@@ -130,3 +131,9 @@ def upsert_matches(matches: list[Match]):
     new_videos = [video.model_dump() for match in matches for video in match.videos]
     if new_videos:
         supabase.table("match-videos").upsert(json=new_videos).execute()
+
+
+def upsert_ranks(ranks: list[Ranking]):
+    new_rankings = [ranking.model_dump() for ranking in ranks]
+    if new_rankings:
+        supabase.table("rankings").upsert(json=new_rankings).execute()
