@@ -1,5 +1,6 @@
 from prefect import task
 from backend.historic.tasks.year.sync_matches import sync_matches
+from backend.historic.tasks.year.sync_ranks import sync_ranks
 from backend.historic.tasks.year.sync_teams import sync_teams
 from backend.historic.tasks.year.sync_events import sync_events
 
