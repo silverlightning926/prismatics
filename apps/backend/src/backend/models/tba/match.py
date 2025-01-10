@@ -24,6 +24,7 @@ class AllianceTeam(BaseModel):
     alliance_key: str
     surrogate: bool
     disqualified: bool
+    position: int
 
     @classmethod
     def from_dict(
@@ -33,6 +34,7 @@ class AllianceTeam(BaseModel):
         match_key: str,
         surrogate: bool,
         disqualified: bool,
+        position: int,
     ):
         return cls(
             key=f"{match_key}_{team_key}",
@@ -40,6 +42,7 @@ class AllianceTeam(BaseModel):
             alliance_key=f"{match_key}_{alliance}",
             surrogate=surrogate,
             disqualified=disqualified,
+            position=position,
         )
 
 
@@ -59,6 +62,13 @@ class Alliance(BaseModel):
         alliance_data: dict,
         score_breakdown: Optional[dict],
     ):
+        team_keys = list(
+            set(
+                alliance_data.get("team_keys", [])
+                + alliance_data.get("surrogate_team_keys", [])
+                + alliance_data.get("dq_team_keys", [])
+            )
+        )
         return cls(
             key=f"{match_key}_{color}",
             match_key=match_key,
@@ -74,14 +84,9 @@ class Alliance(BaseModel):
                     match_key,
                     surrogate=team_key in alliance_data.get("surrogate_team_keys", []),
                     disqualified=team_key in alliance_data.get("dq_team_keys", []),
+                    position=idx,
                 )
-                for team_key in list(
-                    set(
-                        alliance_data.get("team_keys", [])
-                        + alliance_data.get("surrogate_team_keys", [])
-                        + alliance_data.get("dq_team_keys", [])
-                    )
-                )
+                for idx, team_key in enumerate(team_keys)
             ],
         )
 
