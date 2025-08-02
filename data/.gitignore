@@ -5,6 +5,18 @@ build/
 dist/
 wheels/
 *.egg-info
+.ropeproject/
+
+# PDM
+.pdm.toml
+.pdm-python
 
 # Virtual environments
 .venv
+.venv/
+venv
+venv/
+
+# Environment Files
+.env
+.env.*

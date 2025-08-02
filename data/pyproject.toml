@@ -2,8 +2,17 @@
 name = "prismatics-data"
 version = "0.1.0"
 description = "Data Project for Prismatics"
-readme = "../README.md"
+readme = "README.md"
 license = "MIT"
-license-files = ["../LICENSE"]
-requires-python = ">=3.13"
-dependencies = ["prefect>=3.4.10"]
+license-files = ["LICENSE"]
+requires-python = ">=3.9,<3.14"
+dependencies = ["prefect>=3.4.10", "python-dotenv>=1.1.1"]
+
+[tool.pdm.build]
+excludes = ["./**/.git"]
+package-dir = "src"
+includes = ["src/data"]
+
+[tool.pdm.scripts]
+prefect = "prefect server start"
+pipeline = { cmd = "python -m data.main", env = { PYTHONPATH = "src" } }
