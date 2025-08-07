@@ -6,7 +6,12 @@ readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.9,<3.14"
-dependencies = ["prefect>=3.4.10", "python-dotenv>=1.1.1", "SQLAlchemy>=2.0.42", "polars>=1.32.0"]
+dependencies = [
+    "prefect>=3.4.10",
+    "python-dotenv>=1.1.1",
+    "polars>=1.32.0",
+    "httpx>=0.28.1",
+]
 
 [tool.pdm]
 distribution = false
