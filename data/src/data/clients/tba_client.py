@@ -6,11 +6,10 @@ from dataclasses import dataclass, field
 import os
 import httpx
 import polars as pl
-from io import StringIO
 
 @dataclass
-class TBATextResponse:
-    data: str | None
+class TBAJsonResponse:
+    data: dict | list | None
     etag: str | None
 
 @dataclass
@@ -43,7 +42,7 @@ class TBAClient:
     def __init__(self):
         self.config = _TBAConfig()
 
-    def _get(self, endpoint: _TBAEndpoint, etag: str | None = None) -> TBATextResponse:
+    def _get(self, endpoint: _TBAEndpoint, etag: str | None = None) -> TBAJsonResponse:
         headers = {'X-TBA-Auth-Key': self.config.api_key}
         if etag is not None:
             headers['If-None-Match'] = etag
@@ -57,27 +56,27 @@ class TBAClient:
         response_etag = req.headers.get('ETag')
 
         if req.status_code == 304:
-            return TBATextResponse(data=None, etag=response_etag)
+            return TBAJsonResponse(data=None, etag=response_etag)
 
         req.raise_for_status()
 
-        return TBATextResponse(
-            data=req.text,
+        return TBAJsonResponse(
+            data=req.json(),
             etag=response_etag
         )
 
     def _get_as_df(self, endpoint: _TBAEndpoint, etag: str | None = None) -> TBADataFrameResponse:
-        res: TBATextResponse = self._get(endpoint=endpoint, etag=etag)
+        res: TBAJsonResponse = self._get(endpoint=endpoint, etag=etag)
 
         if res.data is None:
             return TBADataFrameResponse(data=None, etag=res.etag)
 
         return TBADataFrameResponse(
-            data=pl.read_json(StringIO(res.data)),
+            data=pl.from_dicts(res.data),
             etag=res.etag
         )
 
-    def get_status(self, etag: str | None = None) -> TBATextResponse:
+    def get_status(self, etag: str | None = None) -> TBAJsonResponse:
         return self._get(
             endpoint=_TBAEndpoint.STATUS,
             etag=etag
