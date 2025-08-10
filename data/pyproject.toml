@@ -24,4 +24,4 @@ package-dir = "src"
 
 [tool.pdm.scripts]
 prefect = "prefect server start"
-pipeline = { cmd = "python -m data.main", env = { PYTHONPATH = "src" } }
+pipeline = { cmd = "python -m main", env = { PYTHONPATH = "src" } }
