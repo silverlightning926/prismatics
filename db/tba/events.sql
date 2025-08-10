@@ -4,8 +4,7 @@ CREATE TABLE tba.districts (
     abbreviation TEXT NOT NULL,
     display_name TEXT NOT NULL,
     year INTEGER NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Events table
@@ -39,8 +38,7 @@ CREATE TABLE tba.events (
     division_keys TEXT[] DEFAULT '{}',  -- Array of division event keys
     playoff_type INTEGER,
     playoff_type_string TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Event webcasts table

@@ -16,8 +16,7 @@ CREATE TABLE tba.alliances (
     playoff_average DECIMAL(10, 2),
     backup_in TEXT REFERENCES tba.teams(key),  -- Team that was called in as backup
     backup_out TEXT REFERENCES tba.teams(key), -- Team that was replaced
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Alliance picks (teams selected for the alliance)

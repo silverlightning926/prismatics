@@ -17,8 +17,7 @@ CREATE TABLE tba.teams (
     website TEXT,
     rookie_year INTEGER,
     motto TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Indexes for common queries

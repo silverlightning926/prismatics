@@ -12,7 +12,6 @@ CREATE TABLE tba.matches (
     winning_alliance TEXT,   -- red, blue, or empty string
     score_breakdown JSONB,   -- Year-specific score breakdown data
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT chk_comp_level CHECK (comp_level IN ('qm', 'ef', 'qf', 'sf', 'f')),
     CONSTRAINT chk_winning_alliance CHECK (winning_alliance IN ('red', 'blue', ''))

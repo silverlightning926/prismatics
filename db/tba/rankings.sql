@@ -13,7 +13,6 @@ CREATE TABLE tba.rankings (
     extra_stats DECIMAL[] DEFAULT '{}',  -- Array of additional statistics
     sort_orders DECIMAL[] DEFAULT '{}',  -- Year-specific sorting criteria
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     UNIQUE(event_key, team_key),
     UNIQUE(event_key, rank)
