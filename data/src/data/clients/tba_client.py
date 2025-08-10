@@ -28,15 +28,15 @@ class _TBAConfig():
     timeout: int = 10 # In Seconds
 
     def __post_init__(self):
-        env_key = os.getenv("TBA_API_KEY")
+        env_api_key = os.getenv("TBA_API_KEY")
 
-        if not env_key or not env_key.strip():
+        if not env_api_key or not env_api_key.strip():
             raise ValueError("TBA API Key Not Found")
 
-        if not isinstance(env_key, str):
+        if not isinstance(env_api_key, str):
             raise TypeError("TBA API Key Must Be A String")
 
-        self.api_key = env_key
+        self.api_key = env_api_key
 
 class TBAClient:
     def __init__(self):

@@ -3,6 +3,7 @@ CREATE DATABASE prismatics;
 \c prismatics
 
 \echo '\nCreating Schema: prismatics.tba'
+DROP SCHEMA public AUTHORIZATION CURRENT_USER;
 CREATE SCHEMA tba AUTHORIZATION CURRENT_USER;
 
 \echo '\nCreating Table: prismatics.table.teams'
