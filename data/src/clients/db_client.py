@@ -1,16 +1,18 @@
-from dotenv import load_dotenv
-load_dotenv()
-
 import os
-
-from dataclasses import dataclass, field
-from sqlalchemy import create_engine, text
-from sqlalchemy.pool import NullPool
 from contextlib import contextmanager
+from dataclasses import dataclass, field
 from typing import Optional
 
+from dotenv import load_dotenv
+from sqlalchemy import create_engine, text
+from sqlalchemy.pool import NullPool
+
+
+load_dotenv()
+
+
 @dataclass
-class _DBConfig():
+class _DBConfig:
     connection_string: str = field(init=False)
 
     def __post_init__(self):
@@ -23,6 +25,7 @@ class _DBConfig():
             raise TypeError("DB Connection Must Be A String")
 
         self.connection_string = env_connection_string
+
 
 class DBClient:
     def __init__(self):
@@ -52,9 +55,9 @@ class DBClient:
             conn.close()
 
     def set_etag(self, endpoint: str, etag: str) -> None:
-       with self.get_connection() as conn:
-           conn.execute(
-               text("""
+        with self.get_connection() as conn:
+            conn.execute(
+                text("""
                    INSERT INTO etags (endpoint, etag)
                    VALUES (:endpoint, :etag)
                    ON CONFLICT (endpoint)
@@ -62,17 +65,14 @@ class DBClient:
                        etag = EXCLUDED.etag,
                        created_at = CURRENT_TIMESTAMP
                """),
-               {
-                   "endpoint": endpoint,
-                   "etag": etag
-               }
-           )
+                {"endpoint": endpoint, "etag": etag},
+            )
 
     def get_etag(self, endpoint: str) -> Optional[str]:
         with self.get_connection() as conn:
             result = conn.execute(
                 text("SELECT etag FROM etags WHERE endpoint = :endpoint"),
-                {"endpoint": endpoint}
+                {"endpoint": endpoint},
             )
             row = result.fetchone()
             return row[0] if row else None
