@@ -5,7 +5,7 @@ description = "Data Project for Prismatics"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
-requires-python = ">=3.9,<3.14"
+requires-python = ">=3.11,<3.14"
 dependencies = [
     "prefect>=3.4.10",
     "python-dotenv>=1.1.1",
@@ -27,9 +27,11 @@ lint = "ruff check"
 lint-fix = "ruff check --fix"
 format = "ruff format --check"
 format-fix = "ruff format"
+typecheck = "pyright"
+check = { composite = ["lint", "format", "typecheck"] }
 
 [dependency-groups]
-lint = ["ruff>=0.12.9"]
+lint = ["ruff>=0.12.9", "pyright>=1.1.390"]
 
 [tool.ruff]
 line-length = 88
@@ -67,3 +69,21 @@ quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 docstring-code-format = true
+
+[tool.pyright]
+pythonVersion = "3.11"
+pythonPlatform = "All"
+
+include = ["src"]
+exclude = ["**/__pycache__", "build", "dist"]
+
+typeCheckingMode = "standard"
+useLibraryCodeForTypes = true
+autoSearchPaths = true
+
+reportMissingImports = true
+reportMissingTypeStubs = false
+reportUnusedImport = true
+reportUnusedClass = "warning"
+reportUnusedFunction = "warning"
+reportUnusedVariable = "warning"
